@@ -513,10 +513,14 @@ viết code">Khi AI<br>viết code</span><span class="type-caret"></span></h1>
 
   function typeOut(slide) {
     slide.querySelectorAll('.type').forEach(el => {
-      const txt = el.dataset.text; let i = 0;
-      clearInterval(el._t); el.innerHTML = '';
-      const esc = c => c === '\n' ? '<br>' : c.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-      setTimeout(() => { el._t = setInterval(() => { el.innerHTML += esc(txt[i++]); if (i >= txt.length) clearInterval(el._t); }, 75); }, 350);
+      const txt = el.dataset.text;
+      const html = n => txt.slice(0, n).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])).replace(/\n/g, '<br>');
+      clearTimeout(el._wait); clearInterval(el._t);   // cancel any run still going from an earlier visit
+      el.innerHTML = '';
+      let n = 0;
+      el._wait = setTimeout(() => {
+        el._t = setInterval(() => { el.innerHTML = html(++n); if (n >= txt.length) clearInterval(el._t); }, 75);
+      }, 350);
     });
   }
 
