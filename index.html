@@ -142,10 +142,11 @@ table.roles td:first-child{font-weight:700;color:var(--green);white-space:nowrap
 #notes h5{font:700 13px var(--mono);color:var(--mint);margin-bottom:8px;letter-spacing:.05em}
 #overview{position:fixed;inset:0;background:#020617;z-index:30;overflow:auto;padding:40px;display:none}
 #overview.show{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;align-content:start}
-.thumb{aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:10px;cursor:pointer;outline:3px solid transparent;transition:outline-color .2s}
+.thumb{height:0;padding-top:56.25%;position:relative;overflow:hidden;border-radius:10px;cursor:pointer;outline:3px solid transparent;transition:outline-color .2s}
 .thumb:hover,.thumb.cur{outline-color:var(--mint)}
-.thumb .slide{opacity:1;visibility:visible;transform-origin:0 0}
-.thumb em{position:absolute;left:8px;top:6px;font:700 13px var(--mono);color:var(--mint);background:rgba(2,6,23,.8);padding:2px 8px;border-radius:6px;font-style:normal;z-index:2}
+.thumb .slide{opacity:1;visibility:visible;transform-origin:0 0;inset:auto;left:0;top:0;width:1920px;height:1080px;transition:none;pointer-events:none}
+.thumb .slide .bar,.thumb .slide .bar-val{transition:none}
+.thumb em{position:absolute;right:8px;bottom:6px;font:700 13px var(--mono);color:var(--mint);background:rgba(2,6,23,.8);padding:2px 8px;border-radius:6px;font-style:normal;z-index:2}
 #help{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#0F172A;color:#E2E8F0;border:1px solid #334155;border-radius:16px;padding:28px 36px;z-index:40;font-size:16px;line-height:2;display:none}
 #help.show{display:block}
 #help kbd{font:700 13px var(--mono);background:#1E293B;border-radius:6px;padding:3px 8px;color:var(--mint);margin-right:10px}
@@ -545,7 +546,8 @@ viết code">Khi AI<br>viết code</span><span class="type-caret"></span></h1>
       ov.innerHTML = '';
       slides.forEach((s, i) => {
         const t = document.createElement('div'); t.className = 'thumb' + (i === cur ? ' cur' : '');
-        const c = s.cloneNode(true); c.classList.add('active', 'instant');
+        const c = s.cloneNode(true); c.classList.add('active', 'instant'); c.removeAttribute('id');
+        c.querySelectorAll('.type').forEach(el => { el.innerHTML = el.dataset.text.replace(/\n/g, '<br>'); });
         t.appendChild(c);
         const em = document.createElement('em'); em.textContent = i + 1; t.appendChild(em);
         t.onclick = () => { toggleOverview(false); go(i); };
